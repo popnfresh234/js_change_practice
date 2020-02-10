@@ -53,23 +53,31 @@ const roundBill = (change) => {
 
 const question = () => {
   const randomBill = generateBill();
+  const roundedBill = roundBill(randomBill);
   const cash = generateCash(randomBill);
-  const change = (cash - randomBill).toFixed(2);
-  console.log(randomBill);
-  console.log(roundBill(randomBill));
-  //   console.log(cash);
-  //   console.log(change);
-  //   console.log(changeRound(change));
 
-  readLine.question('Finished? ', (answer) => {
-    if (answer === 'y') {
-      done = true;
+  console.log(`The total is ${randomBill}`);
+  console.log(`Customer gives you ${cash}`);
+
+  readLine.question('What change? ', (answer) => {
+    if (answer === (cash - roundedBill).toFixed(2)) {
+      console.log('Correct!');
       readLine.close();
-    }
-
-    if (!done) {
+    } else {
+      console.log('Incorrect');
+      console.log(`Correct change is ${(cash - roundedBill).toFixed(2)}`);
       question();
     }
+
+    readLine.question('Done?', (answer) => {
+      if (answer === 'y') {
+        done = true;
+      }
+      if (!done) {
+        question();
+      }
+      readLine.close();
+    });
   });
 };
 
