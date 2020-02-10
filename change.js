@@ -3,13 +3,9 @@ const readLine = require('readline').createInterface({
   output: process.stdout,
 });
 
-let done = false;
 const roundToFive = x => Math.ceil(x / 5) * 5;
 const roundToFifty = x => Math.ceil(x / 50) * 50;
 const roundToHundred = x => Math.ceil(x / 100) * 100;
-const roundToCents = x => Math.ceil(x / 0.05) * 0.05;
-const roundDown = x => Math.floor(x * 5) / 5;
-const roundUp = x => Math.ceil(x * 5) / 5;
 const precision = 100; // Two Decimals
 
 const generateCash = (randomBill) => {
@@ -25,29 +21,29 @@ const generateCash = (randomBill) => {
 
 const generateBill = () => Math.floor(Math.random() * (200 * precision - 1 * precision) + 1 * precision) / (1 * precision);
 
-const roundBill = (change) => {
-  const lastDigit = Number.isInteger(change) ? change % 10
-    : change.toString().slice(-1);
+const roundBill = (bill) => {
+  const lastDigit = Number.isInteger(bill) ? bill % 10
+    : bill.toFixed(2).slice(-1);
 
   const lastDigitInt = parseInt(lastDigit);
 
   if (lastDigitInt === 1 || lastDigitInt === 2) {
-    return change - (lastDigitInt / 100);
+    return bill - (lastDigitInt / 100);
   }
 
   if (lastDigitInt === 6 || lastDigitInt === 7) {
-    return change - ((lastDigitInt - 5) / 100);
+    return bill - ((lastDigitInt - 5) / 100);
   }
 
   if (lastDigitInt === 3 || lastDigitInt === 4) {
-    return change + ((5 - lastDigitInt) / 100);
+    return bill + ((5 - lastDigitInt) / 100);
   }
 
   if (lastDigitInt === 8 || lastDigitInt === 9) {
-    return change + ((10 - lastDigitInt) / 100);
+    return bill + ((10 - lastDigitInt) / 100);
   }
 
-  return change;
+  return bill;
 };
 
 
@@ -62,22 +58,17 @@ const question = () => {
   readLine.question('What change? ', (answer) => {
     if (answer === (cash - roundedBill).toFixed(2)) {
       console.log('Correct!');
+      console.log('\n');
+
+      question();
+    } else if (answer === 'done') {
       readLine.close();
     } else {
       console.log('Incorrect');
       console.log(`Correct change is ${(cash - roundedBill).toFixed(2)}`);
+      console.log('\n');
       question();
     }
-
-    readLine.question('Done?', (answer) => {
-      if (answer === 'y') {
-        done = true;
-      }
-      if (!done) {
-        question();
-      }
-      readLine.close();
-    });
   });
 };
 
