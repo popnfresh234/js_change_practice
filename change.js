@@ -52,8 +52,8 @@ const question = () => {
   const roundedBill = roundBill(randomBill);
   const cash = generateCash(randomBill);
 
-  console.log(`The total is ${randomBill}`);
-  console.log(`Customer gives you ${cash}`);
+  console.log(`${randomBill}`);
+  console.log(`${cash}`);
 
   readLine.question('What change? ', (answer) => {
     if (answer === (cash - roundedBill).toFixed(2)) {
