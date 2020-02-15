@@ -7,6 +7,14 @@ const roundToFive = x => Math.ceil(x / 5) * 5;
 const roundToFifty = x => Math.ceil(x / 50) * 50;
 const roundToHundred = x => Math.ceil(x / 100) * 100;
 const precision = 100; // Two Decimals
+const toSeconds = ms => ms / 1000;
+
+const answerTimes = [];
+
+const calcAvg = (times) => {
+  const totalTimes = times.reduce((prev, cur) => prev + cur);
+  return totalTimes / times.length;
+};
 
 const generateCash = (randomBill) => {
   let cash = 0;
@@ -48,6 +56,7 @@ const roundBill = (bill) => {
 
 
 const question = () => {
+  const qTime = Date.now();
   const randomBill = generateBill();
   const roundedBill = roundBill(randomBill);
   const cash = generateCash(randomBill);
@@ -57,13 +66,17 @@ const question = () => {
 
   readLine.question('What change? ', (answer) => {
     if (answer === (cash - roundedBill).toFixed(2)) {
+      answerTimes.push(toSeconds(Date.now() - qTime));
+
       console.log('Correct!');
       console.log('\n');
 
       question();
     } else if (answer === 'done') {
       readLine.close();
+      console.log(calcAvg(answerTimes));
     } else {
+      answerTimes.push(toSeconds(Date.now() - qTime));
       console.log('Incorrect');
       console.log(`Correct change is ${(cash - roundedBill).toFixed(2)}`);
       console.log('\n');
